@@ -1,5 +1,7 @@
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { Courses } from "../model/Coures.js";
+import { Lecture } from "../model/Lecture.js";
+import { User } from "../model/User.js";
 
 /**
  * GET ALL COURSES
@@ -34,3 +36,19 @@ export const getSingleCourse = asyncHandler(async (req, res) => {
     data: course,
   });
 });
+export const fetchLectures=asyncHandler(async(req,res)=>{
+    const lectures = await Lecture.find({ course: req.params.id });
+
+  const user = await User.findById(req.user._id);
+
+  if (user.role === "admin") {
+    return res.json({ lectures });
+  }
+
+  if (!user.subscription.includes(req.params.id))
+    return res.status(400).json({
+      message: "You have not subscribed to this course",
+    });
+
+  res.json({ lectures });
+})
