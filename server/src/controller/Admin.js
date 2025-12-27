@@ -1,5 +1,6 @@
 import { asyncHandler } from "../utils/asyncHandler.js";
 import {Courses} from "../model/Coures.js"
+import { Lecture } from "../model/Lecture.js";
 
 export const createCourse = asyncHandler(async (req, res) => {
   console.log("BODY 👉", req.body);
@@ -40,6 +41,29 @@ export const createCourse = asyncHandler(async (req, res) => {
   });
 });
 
-export const get = asyncHandler(async(req,res)=>{
-res.send("admin")
-})
+export const addLectures = asyncHandler(async (req, res) => {
+  const course = await Courses.findById(req.params.id);
+console.log(req.file?.originalname, req.file?.size);
+
+  if (!course)
+    return res.status(404).json({
+      message: "No Course with this id",
+    });
+
+  const { title, description } = req.body;
+
+  const file = req.file;
+
+  const lecture = await Lecture.create({
+    title,
+    description,
+    video: file?.path,
+    course: course._id,
+  });
+
+  res.status(201).json({
+    message: "Lecture Added",
+    lecture,
+  });
+});
+
