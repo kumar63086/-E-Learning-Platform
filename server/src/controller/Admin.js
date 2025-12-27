@@ -1,12 +1,15 @@
-import { Courses } from "../model/Coures.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
+import {Courses} from "../model/Coures.js"
 
 export const createCourse = asyncHandler(async (req, res) => {
-  const { title, description, price, duration, category, createdBy } = req.body;
+  console.log("BODY 👉", req.body);
+  console.log("FILE 👉", req.file);
+  console.log("USER 👉", req.user);
+
+  const { title, description, price, duration, category,createdBy } = req.body;
   const image = req.file;
 
-  //  Validation
-  if (!title || !description || !price || !duration || !category || !createdBy) {
+  if (!title || !description || !price || !duration || !category) {
     return res.status(400).json({
       success: false,
       message: "All fields are required",
@@ -20,21 +23,23 @@ export const createCourse = asyncHandler(async (req, res) => {
     });
   }
 
-  //  Create course
   const course = await Courses.create({
     title,
     description,
+    category,
     price,
     duration,
-    category,
+    image: image.path,
     createdBy,
-    image: image.path, // or image.filename depending on setup
   });
 
-  //  Response
   res.status(201).json({
     success: true,
     message: "Course created successfully",
     data: course,
   });
 });
+
+export const get = asyncHandler(async(req,res)=>{
+res.send("admin")
+})

@@ -1,18 +1,22 @@
 import multer from "multer";
 import { v4 as uuid } from "uuid";
+import fs from "fs";
+import path from "path";
+
+const uploadPath = path.join(process.cwd(), "uploads");
+
+// auto-create uploads folder
+if (!fs.existsSync(uploadPath)) {
+  fs.mkdirSync(uploadPath, { recursive: true });
+}
 
 const storage = multer.diskStorage({
   destination(req, file, cb) {
-    cb(null, "uploads");
+    cb(null, uploadPath);
   },
   filename(req, file, cb) {
-    const id = uuid();
-
-    const extName = file.originalname.split(".").pop();
-
-    const fileName = `${id}.${extName}`;
-
-    cb(null, fileName);
+    const ext = path.extname(file.originalname);
+    cb(null, `${uuid()}${ext}`);
   },
 });
 

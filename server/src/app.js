@@ -16,10 +16,11 @@ app.use(cors({
   methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
   credentials: true
 }));
-app.use('/uploads',express.static('uploads'))
+app.use('/uploads', express.static('uploads'));
+
 app.use("/api-docs", swaggerUiMiddleware.serve, swaggerUiMiddleware.setup(swaggerSpec));
 app.use('/api/v1/user',router)
-app.use("/api/v1/",CouresRouter)
+app.use("/api/v1/coures",CouresRouter)
 // 404
 app.use((req, res, next) => {
   next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404));
