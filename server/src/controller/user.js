@@ -143,3 +143,9 @@ export const login = asyncHandler(async (req, res) => {
     },
   });
 });
+
+export const myprofile= asyncHandler(async(req,res)=>{
+  const user = await User.findById(req.user._id);
+
+  res.json({ user });
+})
