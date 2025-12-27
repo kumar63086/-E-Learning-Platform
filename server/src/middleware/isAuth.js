@@ -29,3 +29,12 @@ export const isAuth = asyncHandler(async (req, res, next) => {
   req.user = user;
   next();
 });
+
+export const isAdmin = asyncHandler(async (req, res, next) => {
+  if (req.user.role !== "admin") {
+    throw new AppError("You are not authorized as admin", 403);
+  }
+
+  next();
+});
+
