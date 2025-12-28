@@ -8,6 +8,7 @@ import { swaggerSpec, swaggerUiMiddleware } from "./config/swagger.js";
 import { AppError } from "./utils/AppError.js";
 import adminRoutes from "./Routes/AdminRouter.js"
 import CouresRouter from "./Routes/CouresRouter.js"
+import Razorpay from "razorpay"
 const app= express()
 
 app.use(express.json({ limit: "4gb" }));
@@ -17,6 +18,10 @@ app.use(cors({
   methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
   credentials: true
 }));
+export const razorpayInstance = new Razorpay({
+  key_id: process.env.RAZORPAY_KEY_ID,
+  key_secret: process.env.RAZORPAY_KEY_SECRET,
+});
 app.use('/uploads', express.static('uploads'));
 
 app.use("/api-docs", swaggerUiMiddleware.serve, swaggerUiMiddleware.setup(swaggerSpec));
